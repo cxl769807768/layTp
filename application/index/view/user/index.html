@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="__STATIC__/index/css/base.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/normalize.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/user.css">
+    <script src="__STATIC__/index/js/jquery.1.9.1.js"></script>
+    <script src="__STATIC__/index/js/flexible.js"></script>
+    <script src="__STATIC__/index/js/layer.js"></script>
+</head>
+
+<body>
+<div class="header">
+    <div class="head-title">
+        <a href="javascript:;" onClick="javascript:history.back(-1);"><span class="iconfont">&#xe62a;</span></a>
+        <span>个人中心</span>
+    </div>
+</div>
+<div class="memberstop">
+    <div class="portrait">
+        <img id="avatar" class="avatar" src="" alt="">
+    </div>
+    <div class="nickname">
+
+        <!-- 会员用户样式 -->
+        <!-- <h6 class="nickName" style="color: #BB2D39;"><span class="iconfont" style="color: #FEC459;">&#xe629;</span></h6> -->
+        <!-- 非会员用户样式 -->
+        <h6 class="nickName"><span class="iconfont" style="color: #666;">&#xe629;</span></h6>
+        <p id="id"></p>
+    </div>
+</div>
+<div class="tip-opening" style="display: block;">
+    <div class="opening">
+        <div class="vipleft">
+            <h5>未开通会员服务</h5>
+            <p>现时活动，仅需98元！</p>
+        </div>
+        <div class="vipright">
+            <a href="/vip">立即开通</a>
+        </div>
+    </div>
+</div>
+
+<div class="membersdata">
+    <div class="membersdata-box">
+        <p>
+            <i>1</i>
+            <span>进行中</span>
+        </p>
+        <p>
+            <i>2</i>
+            <span>总订单</span>
+        </p>
+    </div>
+</div>
+
+<div class="service">
+    <div class="service-box">
+        <ul>
+            <li>
+                <a href="#">
+                    <div class="left">
+                        <i class="iconfont">&#xe63e;</i>
+                        <p>绑定手机</p>
+                    </div>
+                    <div class="right">
+                        <p id="mobile"></p>
+                        <span class="iconfont">&#xe640;</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <div class="left">
+                        <i class="iconfont">&#xe648;</i>
+                        <p>任务中心</p>
+                    </div>
+                    <div class="right">
+                        <p>活动暂未开启</p>
+                        <span class="iconfont">&#xe640;</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <div class="left">
+                        <i class="iconfont">&#xe678;</i>
+                        <p>分享给TA</p>
+                    </div>
+                    <div class="right">
+                        <span class="iconfont">&#xe640;</span>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="btn">
+    <button class="login" id="logOut">退出登录</button>
+</div>
+
+<div class="footer-nav">
+    <a href="/">
+        <span class="iconfont">&#xe60b;</span>
+        <p>首页</p>
+    </a>
+    <a href="#">
+        <span class="iconfont">&#xe661;</span>
+        <p>客服</p>
+    </a>
+    <a href="/vip">
+        <span class="iconfont">&#xe666;</span>
+        <p>会员</p>
+    </a>
+    <a href="/user" class="onclick">
+        <span class="iconfont">&#xe667;</span>
+        <p>我的</p>
+    </a>
+</div>
+</body>
+
+</html>
+<script type="application/javascript">
+    $(function () {
+        if(!window.localStorage.getItem('token')){
+            window.location.href = '/login'
+        }
+        var userInfo =  JSON.parse(window.localStorage.getItem('userInfo'));
+        $('.nickname .nickName').text(userInfo.nickname);
+        $('.service-box #mobile').text(userInfo.mobile);
+        $('.nickname #id').text('青柠ID：'+userInfo.id);
+        $('#avatar').attr('src',userInfo.avatar);
+        if(userInfo.vip_type!==0){
+            $('.nickname .nickName').css('color','#BB2D39');
+        }
+
+        $('#logOut').on('click', function() {
+
+            $.ajax({
+                type: 'post', // 提交方式 get/post
+                url: '/api/user/logout', // 需要提交的 url
+                dataType: "json",
+                data: {
+
+                },
+                success: function (result) { // data 保存提交后返回的数据，一般为 json 数据
+                    if(result.err_code == 1){
+                        layer.alert(result.err_msg)
+                    }else{
+                        window.localStorage.removeItem('userInfo');
+                        window.localStorage.removeItem('token');
+                        layer.alert(result.err_msg)
+                        window.location.href = '/login';
+                    }
+                    console.log(result);
+                }
+            })
+
+        });
+
+    })
+
+
+
+</script>

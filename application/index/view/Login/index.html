@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="__STATIC__/index/css/base.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/normalize.css">
+    <link rel="stylesheet" href="__STATIC__/index/css/login.css">
+
+    <script src="__STATIC__/index/js/jquery.1.9.1.js"></script>
+    <script src="__STATIC__/index/js/flexible.js"></script>
+    <script src="__STATIC__/index/js/layer.js"></script>
+    <script src="https://webapi.amap.com/maps?v=1.4.15&key=45865933586e4936b69f4203befdbff2"></script>
+</head>
+
+<body>
+<div class="w">
+    <div class="header">
+        <h6>登录</h6>
+        <p>获取手机验证码即可便捷登录</p>
+    </div>
+    <form action="">
+        <input type="hidden" id="lngX" name="lngX" value=""/>
+        <input type="hidden" id="latY" name="latY" value=""/>
+
+        <div class="tel">
+            <input name="mobile" id="mobile" type="tel" placeholder="请输入手机号码" maxlength="11">
+        </div>
+        <div class="code">
+            <input name="code" type="tel" placeholder="请输入验证码" >
+            <a id="getCodeB" href="javascript:;" onclick="getCode(this)">获取验证码</a>
+        </div>
+        <div class="btn">
+            <button id="submitButton">立即登录</button>
+        </div>
+    </form>
+    <div class="prompt">
+        <p>未注册的手机号验证后自动创建账户</p>
+    </div>
+</div>
+</body>
+
+</html>
+<script type="application/javascript">
+
+    var flag = true;
+    // 获取验证码
+    function getCode(obj){
+        if(!flag){ return}
+        var tel = $("#mobile").val()
+        var telreg = /^1\d{10}$/
+
+        if (!telreg.test(tel) || (tel == "" || tel == null)) {
+            layer.msg('请输入正确的手机号码', {icon:2,time:2000})
+            $("#tel").focus()
+            return false
+        }else{
+            var number = 60;
+            var c_time = setInterval(function(){
+                if(number <= 1){
+                    flag = true
+                    $(obj).html("重新发送");
+                    clearInterval(c_time);
+                }else{
+                    flag = false
+                    $(obj).html("重新发送("+number+")")
+                    number--
+                }
+            },1000);
+            $.ajax({
+                url:"api/Sms/getCode",
+                type:"POST",
+                data:{
+                    mobile: tel,
+                },
+                success:function(data){
+                    layer.alert('验证码发送成功');
+
+                    console.log(data);
+                }
+            })
+        }
+    }
+    $('#submitButton').on('click', function() {
+        event.preventDefault();
+        $.ajax({
+            type: 'post', // 提交方式 get/post
+            url: '/api/user/mobile_code_reg_login', // 需要提交的 url
+            dataType: "json",
+            data: {
+                'mobile': $('input[name=mobile]').val(),
+                'code': $('input[name=code]').val(),
+                'lngX': $('input[name=lngX]').val(),
+                'latY': $('input[name=latY]').val(),
+            },
+            success: function (result) { // data 保存提交后返回的数据，一般为 json 数据
+                if(result.err_code == 1){
+                    layer.alert(result.err_msg)
+                }else{
+                    window.localStorage.setItem('userInfo',JSON.stringify(result.data.userInfo));
+                    window.localStorage.setItem('token',result.data.token);
+                    layer.alert(result.err_msg)
+                    window.location.href = '/user';
+                }
+                console.log(result);
+            }
+        })
+
+    });
+    if (navigator.geolocation){
+        /***************************************
+         由于Chrome、IOS10等已不再支持非安全域的浏览器定位请求，为保证定位成功率和精度，请尽快升级您的站点到HTTPS。
+         ***************************************/
+        var map, geolocation;
+        //加载地图，调用浏览器定位服务
+        map = new AMap.Map('container', {
+            resizeEnable: true
+        });
+        map.plugin('AMap.Geolocation', function() {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true, //是否使用高精度定位，默认:true
+                timeout: 10000, //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true, //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                buttonPosition: 'RB'
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete); //返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError); //返回定位出错信息
+        });
+        //解析定位结果
+        function onComplete(data) {
+
+            var str = [];
+            console.log(data.position.getLat());
+            console.log(data.position.getLng());
+            str.push(data.position.getLat());
+            str.push(data.position.getLng());
+            $('#lngX').val(data.position.getLng());
+            $('#latY').val(data.position.getLat());
+            console.log(str);
+        }
+
+        //解析定位错误信息
+        function onError(data) {
+
+            layer.alert('Chrome、IOS10等已不再支持非安全域的浏览器定位请求，为保证定位成功率和精度，请尽快升级您的站点到HTTPS')
+
+        }
+    }else{
+        layer.alert('Chrome、IOS10等已不再支持非安全域的浏览器定位请求，为保证定位成功率和精度，请尽快升级您的站点到HTTPS')
+
+    }
+
+
+
+</script>

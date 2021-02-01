@@ -1,0 +1,83 @@
+{extend name="admin@public/layout/main"}
+
+{block name="search_form"}
+<div class="search-form-page-tab-content" id="search-form" style="display:none;">
+    <form class="layui-form" lay-filter="laytp_search_form" style="margin-bottom:0px;">
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="用户名">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="search_param[username][value]" id="username" placeholder="请输入用户名" class="layui-input">
+                <input type="hidden" name="search_param[username][condition]" value="LIKE">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="手机号">手机号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="search_param[mobile][value]" id="mobile" placeholder="请输入手机号" class="layui-input">
+                <input type="hidden" name="search_param[mobile][condition]" value="LIKE">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="注册地点">注册地点</label>
+            <div class="layui-input-inline">
+                <input type="text" name="search_param[reg_area][value]" id="reg_area" placeholder="请输入注册地点" class="layui-input">
+                <input type="hidden" name="search_param[reg_area][condition]" value="LIKE">
+            </div>
+        </div>
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="用户名">昵称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="search_param[nickname][value]" id="nickname" placeholder="请输入昵称" class="layui-input">
+                <input type="hidden" name="search_param[nickname][condition]" value="LIKE">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="是否为会员">是否为会员</label>
+            <div class="layui-input-inline">
+                <select name="search_param[vip_type][value]" id="is_super_manager" placeholder="请输入是否为会员">
+                    <option value=""></option>
+                    <option value="0">否</option>
+                    <option value="1">永久会员</option>
+                    <option value="2">年度会员</option>
+                    <option value="3">季度会员</option>
+                </select>
+                <input type="hidden" name="search_param[vip_type][condition]" value="=">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="账号状态">账号状态</label>
+            <div class="layui-input-inline">
+                <select name="search_param[status][value]" id="status" placeholder="请输入账号状态">
+                    <option value=""></option>
+                    <option value="0">冻结</option>
+                    <option value="1">正常</option>
+                </select>
+                <input type="hidden" name="search_param[status][condition]" value="=">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <label class="layui-form-label" title="创建时间">创建时间</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" id="create_time" name="search_param[create_time][value]" id="create_time" laydate="true" laydate_type="datetime" laydate_range="true" placeholder="请选择时间">
+    <input type="hidden" name="search_param[create_time][condition]" value="BETWEEN">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <button class="layui-btn layui-btn-sm layui-btn-normal" lay-submit lay-filter="laytp"><i class="layui-icon"></i> 搜 索</button>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="script"}
+<script src="__ADMIN_JS__/user.js" charset="utf-8"></script>
+{/block}
+
+{block name="js_template"}
+{include file="public/js_tpl/toolbar_tpl"}
+{include file="public/js_tpl/operation_tpl"}
+{/block}

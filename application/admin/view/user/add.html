@@ -1,0 +1,77 @@
+{extend name="admin@public/layout/popup_form"}
+
+{block name="form"}
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="手机号">手机号 <text title="必填项" style="color:red;">*</text></label>
+        <div class="layui-input-block">
+            <input type="text" name="row[mobile]" placeholder="请输入手机号" class="layui-input" lay-verify="required" lay-verType="tips">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="用户名">昵称 <text title="必填项" style="color:red;">*</text></label>
+        <div class="layui-input-block">
+            <input type="text" name="row[nickname]" placeholder="请输入昵称" class="layui-input" lay-verify="required" lay-verType="tips">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="密码">密码 <text title="必填项" style="color:red;">*</text></label>
+        <div class="layui-input-block">
+            <input type="password" name="row[password]" placeholder="请输入密码" class="layui-input" lay-verify="required" lay-verType="tips">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="密码">重复密码 <text title="必填项" style="color:red;">*</text></label>
+        <div class="layui-input-block">
+            <input type="password" name="row[re_password]" placeholder="请输入重复密码" class="layui-input" lay-verify="required" lay-verType="tips">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="账号状态">账号状态</label>
+        <div class="layui-input-block">
+            <!-- 隐藏域设置开关未选中时需要传递的参数值 -->
+            <input type="hidden" name="row[status]" value="0" />
+            <input type="checkbox" name="row[status]" checked="checked" lay-skin="switch" lay-text="正常|冻结" value="1" />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="是否为会员">是否为会员</label>
+        <div class="layui-input-block">
+            <!-- 隐藏域设置开关未选中时需要传递的参数值 -->
+            <input type="hidden" name="row[vip_type]" value="0" />
+            <div class="layui-input-block">
+                <select name="row[vip_type]" lay-verify="required">
+                    <option value=""></option>
+                    <option value="0">否</option>
+                    <option value="1">永久会员</option>
+                    <option value="2">年度会员</option>
+                    <option value="3">季度会员</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" title="单个图片">头像</label>
+        <div class="layui-input-block">
+            <div class="layui-upload">
+                <div class="layui-inline" style="width: 75%;"><input type="text" class="layui-input" name="row[avatar]" id="input_avatar" /></div>
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn layui-btn-primary pull-left"
+                            id="avatar"
+                            upload="true"
+                            accept="images"
+                            single_multi="single"
+                    >选择上传</button>
+                </div>
+                <div class="pic-more">
+                    <ul class="pic-more-upload-list" id="preview_avatar"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

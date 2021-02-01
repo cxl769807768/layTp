@@ -1,0 +1,9 @@
+!.gitignore
+/.idea
+/addons_bak
+/.vscode
+*.log
+.env
+/public/api.html
+/runtime
+/public/uploads
